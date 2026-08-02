@@ -9,7 +9,7 @@ engine = create_engine(
 )
 SessionLocal = sessionmaker(autocommit=False, sutoflush=False, bind=engine)
 
-Base = declerative_base()
+Base = declarative_base()
 
 def get_db():
     db = SessionLocal()
