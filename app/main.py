@@ -44,27 +44,28 @@ def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     tasks = crud.get_tasks(db, skip=skip, limit=limit)
     return tasks
 
-@app.get("/task/{task_id}", response_model=schemas.taskresponse)
+@app.get("/tasks/{task_id}", response_model=schemas.taskresponse)
 def read_task(task_id: int, db: Session = Depends(get_db)):
     db_task = crud.get_task(db, task_id=task_id)
-    if db_task in None:
+    if db_task is None:
         raise HTTPException(
-                status_code=status.HTTP_404_not_FOUND, detail="Task not found")
-        return db_task
-@app.put("/tasks/{id}", response_model=schemas.taskresponse)
+                status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
+    return db_task
+@app.put("/tasks/{task_id}", response_model=schemas.taskresponse)
 def update_task(task_id: int, task_update: schemas.taskupdate, db: Session = Depends(get_db),):
     db_task = crud.update_task(db, task_id=task_id, task_update=task_update)
     if db_task is None:
         raise HTTPException(
-                status_code=status.HTTP_4O4_NOT_FOUND, detail="Task not found")
+                status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
     return db_task
 
-@app.delete("/tasks/{id}", response_model=schemas.taskresponse)
+@app.delete("/tasks/{task_id}", response_model=schemas.taskresponse)
 def delete_task(task_id: int, db: Session = Depends(get_db)):
     db_task = crud.delete_task(db, task_id=task_id)
     if db_task is None:
         raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
+            status_code=status.HTTP_404_NOT_FOUND, detail="Task not found"
+        )
     return db_task
 
 @app.get("/stats/")
